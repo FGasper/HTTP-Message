@@ -5,8 +5,35 @@ use warnings;
 
 use base 'Exporter';
 
-our @EXPORT_OK=qw(split_header_words _split_header_words join_header_words);
+our @EXPORT_OK = qw(
+    split_header_words
+    _split_header_words
+    join_header_words
 
+    split_header_tokens
+);
+
+sub split_header_tokens {
+    my ($value) = @_;
+
+    $value =~ s<\A[ \t]+><>;
+    $value =~ s<[ \t]+\z><>;
+
+    my $inval;
+
+    my @tokens;
+    for my $p ( split m<[ \t]*,[ \t]*>, $value ) {
+        if ($p =~ tr~()<>@,;:\\"/[]?={} \t\x7f\x00-\x1f~~) {
+            $inval = $p;
+        }
+
+        die "`$inval` is not a valid HTTP token!" if defined $inval;
+
+        push @tokens, $p;
+    }
+
+    return @tokens;
+}
 
 sub split_header_words {
     my @res = &_split_header_words;
