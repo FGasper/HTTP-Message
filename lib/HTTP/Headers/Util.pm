@@ -11,7 +11,6 @@ our @EXPORT_OK = qw(
     split_header_words
     _split_header_words
     join_header_words
-
     split_header_tokens
 );
 
@@ -138,7 +137,6 @@ exported by default.
 The following functions are available:
 
 =over 4
-
 
 =item split_header_words( @header_values )
 
