@@ -3,6 +3,8 @@ package HTTP::Headers::Util;
 use strict;
 use warnings;
 
+our $VERSION = '6.27';
+
 use base 'Exporter';
 
 our @EXPORT_OK = qw(

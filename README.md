@@ -6,7 +6,7 @@ HTTP::Message - HTTP style message (base class)
 
 # VERSION
 
-version 6.13
+version 6.26
 
 # SYNOPSIS
 
@@ -285,7 +285,7 @@ The following methods are available:
 
 All methods unknown to `HTTP::Message` itself are delegated to the
 `HTTP::Headers` object that is part of every message.  This allows
-convenient access to these methods.  Refer to [HTTP::Headers](https://metacpan.org/pod/HTTP::Headers) for
+convenient access to these methods.  Refer to [HTTP::Headers](https://metacpan.org/pod/HTTP%3A%3AHeaders) for
 details of these methods:
 
     $mess->header( $field => $val )
@@ -322,7 +322,7 @@ Gisle Aas <gisle@activestate.com>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 1994-2017 by Gisle Aas.
+This software is copyright (c) 1994 by Gisle Aas.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

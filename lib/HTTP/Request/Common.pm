@@ -3,11 +3,13 @@ package HTTP::Request::Common;
 use strict;
 use warnings;
 
+our $VERSION = '6.27';
+
 our $DYNAMIC_FILE_UPLOAD ||= 0;  # make it defined (don't know why)
 
 use Exporter 5.57 'import';
 
-our @EXPORT =qw(GET HEAD PUT PATCH POST);
+our @EXPORT =qw(GET HEAD PUT PATCH POST OPTIONS);
 our @EXPORT_OK = qw($DYNAMIC_FILE_UPLOAD DELETE);
 
 require HTTP::Request;
@@ -21,6 +23,7 @@ sub DELETE { _simple_req('DELETE', @_); }
 sub PATCH { request_type_with_data('PATCH', @_); }
 sub POST { request_type_with_data('POST', @_); }
 sub PUT { request_type_with_data('PUT', @_); }
+sub OPTIONS { request_type_with_data('OPTIONS', @_); }
 
 sub request_type_with_data
 {
@@ -215,7 +218,7 @@ sub form_data   # RFC1867
 		    # or perhaps a file in the /proc file system where
 		    # stat may return a 0 size even though reading it
 		    # will produce data.  So we cannot make
-		    # a Content-Length header.  
+		    # a Content-Length header.
 		    undef $length;
 		    last;
 		}
@@ -259,7 +262,7 @@ sub form_data   # RFC1867
 		}
 		if ($buflength) {
 		    defined $length && ($length -= $buflength);
-		    return $buf 
+		    return $buf
 	    	}
 	    }
 	};
@@ -312,14 +315,15 @@ __END__
   $ua->request(POST 'http://somewhere/foo', [foo => bar, bar => foo]);
   $ua->request(PATCH 'http://somewhere/foo', [foo => bar, bar => foo]);
   $ua->request(PUT 'http://somewhere/foo', [foo => bar, bar => foo]);
+  $ua->request(OPTIONS 'http://somewhere/foo', [foo => bar, bar => foo]);
 
 =head1 DESCRIPTION
 
 This module provides functions that return newly created C<HTTP::Request>
 objects.  These functions are usually more convenient to use than the
-standard C<HTTP::Request> constructor for the most common requests.  
+standard C<HTTP::Request> constructor for the most common requests.
 
-Note that L<LWP::UserAgent> has several convenience methods, including 
+Note that L<LWP::UserAgent> has several convenience methods, including
 C<get>, C<head>, C<delete>, C<post> and C<put>.
 
 The following functions are provided:
@@ -387,6 +391,18 @@ The same as C<POST> below, but the method in the request is C<PATCH>.
 =item PUT $url, Header => Value,..., Content => $content
 
 The same as C<POST> below, but the method in the request is C<PUT>
+
+=item OPTIONS $url
+
+=item OPTIONS $url, Header => Value,...
+
+=item OPTIONS $url, $form_ref, Header => Value,...
+
+=item OPTIONS $url, Header => Value,..., Content => $form_ref
+
+=item OPTIONS $url, Header => Value,..., Content => $content
+
+The same as C<POST> below, but the method in the request is C<OPTIONS>
 
 =item POST $url
 
@@ -528,7 +544,9 @@ C<< $ua->request(POST ...) >>.
 
 L<HTTP::Request>, L<LWP::UserAgent>
 
+Also, there are some examples in L<HTTP::Request/"EXAMPLES"> that you might
+find useful. For example, batch requests are explained there.
+
 =cut
 
 #ABSTRACT: Construct common HTTP::Request objects
-

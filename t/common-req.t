@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
-plan tests => 61;
+plan tests => 71;
 
 use HTTP::Request::Common;
 
@@ -23,6 +23,16 @@ ok($r->uri->eq("http://www.sn.no"));
 is($r->header('If-Match'), "abc");
 is($r->header("from"), "aas\@sn.no");
 
+$r = HEAD "http://www.sn.no/",
+	Content => 'foo';
+is($r->content, 'foo');
+
+$r = HEAD "http://www.sn.no/",
+	Content => 'foo',
+	'Content-Length' => 50;
+is($r->content, 'foo');
+is($r->content_length, 50);
+
 $r = PUT "http://www.sn.no",
      Content => 'foo';
 note $r->as_string, "\n";
@@ -37,6 +47,23 @@ is($r->content, "foo");
 is($r->content_length, 3);
 
 $r = PUT "http://www.sn.no",
+     { foo => "bar" };
+is($r->content, "foo=bar");
+
+$r = OPTIONS "http://www.sn.no",
+     Content => 'foo';
+note $r->as_string, "\n";
+
+is($r->method, "OPTIONS");
+is($r->uri->host, "www.sn.no");
+
+ok(!defined($r->header("Content")));
+
+is(${$r->content_ref}, "foo");
+is($r->content, "foo");
+is($r->content_length, 3);
+
+$r = OPTIONS "http://www.sn.no",
      { foo => "bar" };
 is($r->content, "foo=bar");
 
